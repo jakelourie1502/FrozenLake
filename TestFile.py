@@ -2,14 +2,10 @@ import numpy as np
 from frozen_lake import gridWorld
 from Sarsa import *
 np.set_printoptions(suppress=True, precision=3)
-from utils import print_state_vals, print_policy
+from utils import print_state_vals, print_policy, small_lake
 
 # Get Environment #
-size = (4,4)
-lakes = [(1,1),(1,3),(2,3),(3,0)]
-goals = {(3,3):1}
-dist = np.zeros((size[0]*size[1]+1))
-dist[0]=1
+size, lakes, goals, dist = small_lake()
 env=gridWorld(size,lakes,goals, n_actions = 4, max_steps = 100, dist = dist, seed = None, rnd=0.1)
 print(env.goal_states_idx)
 print(env.board)
