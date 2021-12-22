@@ -45,7 +45,7 @@ class Environment(EnvironmentModel):
             raise Exception('Invalid_action.')
             
         self.n_steps += 1
-        done = (self.n_steps >= self.max_steps)
+        done = (self.n_steps >= self.max_steps) or self.state == self.terminal_state
         
         self.state, reward = self.draw(self.state, action)
         
