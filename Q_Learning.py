@@ -10,12 +10,12 @@ def q_learning(env,max_episodes,eta,gamma,epsilon,seed=None):
     # eta and epsilon decrease linearly as number of episodes increases
     eta = np.linspace(eta, 0, max_episodes)
     epsilon = np.linspace(epsilon, 0, max_episodes)
-
+    
     # Set Q values for each state and action to zero
-    q = np.zeros((env.n_states, env.n_actions))
+    q = np.ones((env.n_states, env.n_actions))
     episodes = 0
     for i in range(max_episodes):
-        #print(i)
+        # print(i)
         episodes += 1
         # Initial state for episode i
         state = env.reset()
@@ -34,11 +34,12 @@ def q_learning(env,max_episodes,eta,gamma,epsilon,seed=None):
             # Get next_state, reward and done flag for action a at state s
             next_obs_state, reward, done = env.step(action)
             # print(next_obs_state,reward,done)
-            # Select action a'
+            # Select action a' for state s'
             next_action = np.argmax(q[next_obs_state, :])
 
             # Update q table
-            q[state, action] = q[state, action] + eta[i] * (reward + gamma * (q[next_obs_state, next_action]) - q[state, action])
+            q[state, action] = q[state, action] + eta[i] * (
+                        reward + gamma * (q[next_obs_state, next_action]) - q[state, action])
 
             # Set next state and next action
             state = next_obs_state

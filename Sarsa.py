@@ -10,9 +10,9 @@ def sarsa(env,max_episodes,eta,gamma,epsilon,seed=None):
     # eta and epsilon decrease linearly as number of episodes increases
     eta = np.linspace(eta, 0, max_episodes)
     epsilon = np.linspace(epsilon, 0, max_episodes)
-    print(eta,epsilon)
+    
     # Set Q values for each state and action to zero
-    q = np.zeros((env.n_states,env.n_actions))
+    q = np.ones((env.n_states,env.n_actions))
     episodes = 0
     for i in range(max_episodes):
         #print(i)
