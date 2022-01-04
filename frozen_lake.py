@@ -84,13 +84,37 @@ class gridWorld(Environment):
         "The method r returns the expected reward in having transitioned from state to next state given action."
         return self.goal_states_idx[state] if state in self.goal_states_idx else 0
     
-    def render(self):
+    def game_play_render(self):
         board = self.board.copy()
         posR, posC = self.stateIdx_to_coors[self.state]
         board[posR, posC] = "P"
         clear_output()
         print(board)
+    
+    def render(self, policy, value):
+        self.print_policy(policy)
+        self.print_state_vals(value)
+
+    def print_policy(self, policy_array):
         
+        """
+        Changes [0,1,2,3] to ["^", ">", "<", "v"]
+        Prints the policy
+        """
+        action_dict = {0:"^", 1: ">", 2: "v", 3: "<"}
+        policy_board = np.zeros((self.h , self.w), dtype = str)
+        for s in range(self.n_states-1):
+            coors = self.stateIdx_to_coors[s]
+            policy_board[coors] = action_dict[policy_array[s]]
+        print(policy_board)
+    
+    def print_state_vals(self, values):
+        policy_board = np.zeros((self.h , self.w))
+        for s in range(self.n_states-1):
+            coors = self.stateIdx_to_coors[s]
+            policy_board[coors] = values[s]
+        print(policy_board)
+
     def create_dicts_and_indexes(self,size, lakes, goal_states, terminal_state = True):
         """
         Inputs... 

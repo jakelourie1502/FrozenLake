@@ -1,7 +1,8 @@
 import numpy as np
 from frozen_lake import gridWorld
 import copy
-from utils import small_lake, print_policy, print_state_vals
+from Default_Lakes import small_lake, big_lake
+import time
 """
 Policy evaluation should be in the form a dictionary...
 {
@@ -19,7 +20,7 @@ Policy evaluation should be in the form a dictionary...
 }
 """
 
-def Qsa(Policy_info, stateIdx, action, gamma):
+def Qsa(env,Policy_info, stateIdx, action, gamma):
     """
     Overview: Function returns the estimated immediate reward (r) and discounted future reward(gamma*V(S_t+1))
     Input: Policy dict with state values, current stateIdx, action chosen, discout rate(gamma)
@@ -41,7 +42,7 @@ def Qsa(Policy_info, stateIdx, action, gamma):
     return running_total_val_r, running_total_val_future_r
 
 
-def one_time_evaluation(Policy_info,env):
+def one_time_evaluation(Policy_info,env,gamma):
     """
     Overview: Evaluates the value of the policy for each state, returning the overall policy value of a state, and the individual values of actions at states
     Input: Policy_info dictionary and the environment. 
@@ -60,7 +61,7 @@ def one_time_evaluation(Policy_info,env):
     for stateIdx, state_info in Policy_info_copy.items():
         running_total_val = 0
         for action in range(env.n_actions):
-            reward, future_val = Qsa(Policy_info, stateIdx, action, gamma)
+            reward, future_val = Qsa(env,Policy_info, stateIdx, action, gamma)
             Policy_info_copy[stateIdx]['action_value'][action] = reward + future_val
             running_total_val += (reward + future_val) * Policy_info_copy[stateIdx]['policy'][action]
        
@@ -68,23 +69,19 @@ def one_time_evaluation(Policy_info,env):
     return Policy_info_copy, old_policy
     
 
-def policy_evaluation_loop(starting_policy_info, env, view_board=True, method = 'converge', iterations=100, theta=0.1,gamma=0.9):
+def policy_evaluation_loop(starting_policy_info, env, method = 'converge', iterations=100, theta=0.1,gamma=0.9):
     cur_policy = starting_policy_info.copy()
     it = 0
-    if view_board:
-        print_policy_vals(env, cur_policy)
     
     if method == 'iteration':
         for i in range(iterations):
             cur_policy, _ = one_time_evaluation(cur_policy, env)
-            if view_board: print_policy_vals(env, cur_policy)
         it = iterations
     if method == 'converge':
         
         while it < iterations:
             it+=1
-            new_policy, old_policy = one_time_evaluation(cur_policy, env)
-            if view_board: print_policy_vals(env, old_policy)
+            new_policy, old_policy = one_time_evaluation(cur_policy, env,gamma)
             loss_total =0
             for old, new in zip(old_policy.values(), new_policy.values()):
                 l = abs(old['value'] - new['value'])
@@ -105,15 +102,16 @@ def policy_improvement(env, policy_info):
         idx += 1
     return policy
 
-def policy_iteration(env, gamma, theta, max_it_eval, max_it_iter, eval_method, policy_info,view_board = False):
+def policy_iteration(env, gamma, theta, max_it_iter, max_it_eval = 50, eval_method = 'converge', policy_info = None):
     """
     max_it_eval: number of iterations each time a policy evaluation is carried out
     max_it_iter: number of iterations of the overall algorithm
     """
-    if policy_info is None:
+    if policy_info == None:
         policy_info = init_blank_policy(env)
+
     for it in range(max_it_iter):
-        policy_info, _ = policy_evaluation_loop(policy_info, env, view_board=view_board, method = eval_method, iterations=max_it_eval, theta=theta, gamma = gamma)
+        policy_info, _ = policy_evaluation_loop(policy_info, env, method = eval_method, iterations=max_it_eval, theta=theta, gamma = gamma)
         pol = policy_improvement(env, policy_info)
         no_change_checker = True
         for s in range(env.n_states):                
@@ -123,9 +121,13 @@ def policy_iteration(env, gamma, theta, max_it_eval, max_it_iter, eval_method, p
 
         if no_change_checker:
             print(f"Policy static after {it} iterations")
-            return policy_info, pol
+            state_values = [policy_info[x]['value'] for x in range(env.n_states)]
+            policy_max = [np.argmax(policy_info[x]['policy']) for x in range(env.n_states)]
+            return policy_max, state_values, it+1
     print("Policy didn't converge")
-    return policy_info, pol
+    state_values = [policy_info[x]['value'] for x in range(env.n_states)]
+    policy_max = [np.argmax(policy_info[x]['policy']) for x in range(env.n_states)]
+    return policy_max, state_values, max_it_iter
 
 def init_blank_policy(env):
     Policy_info = {}
@@ -134,7 +136,7 @@ def init_blank_policy(env):
         Policy_info[s]['policy'] = np.zeros((env.n_actions,)) + 1 / env.n_actions
         Policy_info[s]['action_value'] = np.zeros((env.n_actions,))
         Policy_info[s]['value'] = 0
-        return Policy_info
+    return Policy_info
 
 if __name__ == '__main__':
     
@@ -153,13 +155,12 @@ if __name__ == '__main__':
 
     #Init Parameters
     gamma = 0.9
-    view_board = False
-    method = 'converge'
-    max_it_per_eval = 100
     max_overall_its = 10
     theta = 0.001
-    policy_info, pol = policy_iteration(env, gamma, theta, max_it_per_eval, max_overall_its, method, Policy_info, view_board)
-    state_values = [policy_info[x]['value'] for x in range(env.n_states)]
-    policy_max = [np.argmax(policy_info[x]['policy']) for x in range(env.n_states)]
-    print_state_vals(env, state_values)
-    print_policy(env, policy_max)
+    tn = time.time()
+    policy, state_values, counter = policy_iteration(env, gamma, theta, max_overall_its)
+    tn = time.time() - tn
+    print(f'It took {counter} iterations and {tn} seconds')
+    
+    env.render(policy,state_values)
+    

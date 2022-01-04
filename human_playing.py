@@ -21,5 +21,5 @@ while not done:
     if state == env.terminal_state: 
         done == True; break
         
-    env.render()
+    env.game_play_render()
 print(f"Game Over, Reward: {r}")

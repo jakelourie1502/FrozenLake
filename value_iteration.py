@@ -2,7 +2,8 @@ import numpy as np
 from frozen_lake import gridWorld
 import copy
 np.set_printoptions(suppress=True, precision=2)
-from utils import small_lake, print_state_vals, print_policy
+from Default_Lakes import small_lake, big_lake
+import time
 
 """"
 DESCRIPTION
@@ -17,7 +18,7 @@ for all states
 then set the policy to the a that maximises Qsa for each state.
 """
 
-def Qsa(state_values, stateIdx, action, gamma):
+def Qsa(env, state_values, stateIdx, action, gamma):
     """
     Overview: Function returns the estimated immediate reward (r) and discounted future reward(gamma*V(S_t+1))
     Input: Policy dict with state values, current stateIdx, action chosen, discout rate(gamma)
@@ -38,12 +39,12 @@ def Qsa(state_values, stateIdx, action, gamma):
     q_val = running_total_val_r + running_total_val_future_r
     return q_val
 
-def value_iteration(env,gamma, theta):
+def value_iteration(env,gamma, theta,max_iterations):
     state_values = np.zeros(env.n_states,dtype=float)
     deviation = 100
     counter = 0
     
-    while deviation > theta:
+    while deviation > theta and counter < max_iterations:
         
         counter +=1
         deviation = 0
@@ -53,7 +54,7 @@ def value_iteration(env,gamma, theta):
             old_v = state_values_copy[s]
             best_q_val = -float('inf')
             for a in range(env.n_actions):
-                qval = Qsa(state_values_copy, s, a, gamma)
+                qval = Qsa(env,state_values_copy, s, a, gamma)
                 if qval > best_q_val:
                     best_q_val = qval
             state_values[s] = best_q_val
@@ -66,19 +67,21 @@ def value_iteration(env,gamma, theta):
         for a in range(env.n_actions):
             best_q_val = -float('inf')
             for a in range(env.n_actions):
-                qval = Qsa(state_values_copy, s, a, gamma)
+                qval = Qsa(env,state_values_copy, s, a, gamma)
                 if qval > best_q_val:
                     best_q_val = qval
                     best_action = a
         policy_max_a[s] = best_action
 
-    return state_values, policy_max_a, counter
+    return policy_max_a, state_values,  counter
 
 if __name__ == '__main__':
     theta = 0.01
     gamma = 0.9
     size, lakes, goals, dist = small_lake()
     env=gridWorld(size,lakes,goals, n_actions = 4, max_steps = 100, dist = dist, seed = None, rnd=0.1)
+    tn = time.time()
     state_values, policy_max, counter = value_iteration(env, gamma, theta)
-    print_state_vals(env, state_values)
-    print_policy(env, policy_max)
+    tn = time.time() - tn
+    print(f'It took {counter} iterations and {tn} seconds')
+    env.render(policy_max, state_values)
