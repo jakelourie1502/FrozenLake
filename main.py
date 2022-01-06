@@ -31,7 +31,8 @@ def main():
     print('## Policy iteration')
     policy, value, it_counter = policy_iteration(env, gamma, theta, max_iterations)
     env.render(policy, value)
-
+    # Store Optimal policy for Sarsa and Q-Learning #
+    optimal_policy = prep_optimal(env,policy)
     print('')
 
     print('## Value iteration')
@@ -41,20 +42,24 @@ def main():
     print('')
     
     print('# Model-free algorithms')
-    max_episodes = 2000
+    max_episodes = 10000
     eta = 0.5
-    epsilon = 1
+    epsilon = 0.8
     
     print('')
-    
-    print('## Sarsa')
-    policy, value,_ = sarsa(env, max_episodes, eta, gamma, epsilon, seed=seed)
+
+    print('##_Sarsa')
+    policy, value, episodes = sarsa(env, max_episodes=max_episodes, eta=eta, gamma=gamma, epsilon=epsilon,
+                                    optimal_policy=optimal_policy, seed=seed)
+    print('Number of episodes', episodes)
     env.render(policy, value)
     
     print('')
-    
-    print('## Q-learning')
-    policy, value,_ = q_learning(env, max_episodes, eta, gamma, epsilon, seed=seed)
+
+    print('##_Q-learning')
+    policy, value, episodes = q_learning(env, max_episodes=max_episodes, eta=eta, gamma=gamma, epsilon=epsilon,
+                                         optimal_policy=optimal_policy, seed=seed)
+    print('Number of episodes:', episodes)
     env.render(policy, value)
     
     print('')
