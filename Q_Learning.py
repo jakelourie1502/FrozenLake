@@ -1,5 +1,5 @@
 import numpy as np
-from Sarsa import check_optimal
+from utils import check_optimal
 
 
 def q_learning(env,max_episodes,eta,gamma,epsilon,optimal_policy=None,seed=None,initial_q=0,eta_floor = 0,

@@ -19,10 +19,39 @@ def print_state_vals(env, values):
         policy_board[coors] = values[s]
     print(policy_board)
 
-def small_lake():
-    size = (4,4)
-    lakes = [(1,1),(1,3),(2,3),(3,0)]
-    goals = {(3,3):1}
-    dist = np.zeros((size[0]*size[1]+1))
-    dist[0]=1
-    return size, lakes, goals, dist
+
+
+def check_optimal(optimal_policy,policy,env):
+    if len(policy)<20:
+        policy = np.array(policy)
+        truth_array = np.abs(optimal_policy - policy)
+        truth = np.sum(truth_array)
+        wrong = np.count_nonzero(truth_array)
+    else:
+        lakes = env.lakes_idx
+        goals = np.array(list(env.goal_states_idx.keys()))
+        terminals = goals + 1
+        exclude = np.append(lakes, np.append(goals, terminals))
+        policy = np.array(policy)
+        policy = np.delete(policy,exclude)
+        truth_array = np.abs(optimal_policy - policy)
+        truth = np.sum(truth_array)
+        wrong = np.count_nonzero(truth_array)
+
+    if truth == 0:
+        return True,wrong
+    else:
+        return False,wrong
+
+
+def prep_optimal(env,policy):
+    if len(policy)<20:
+        optimal_policy = np.array(policy)
+    else:
+        optimal_policy = np.array(policy)
+        lakes = env.lakes_idx
+        goals = np.array(list(env.goal_states_idx.keys()))
+        terminals = goals + 1
+        exclude = np.append(lakes, np.append(goals, terminals))
+        optimal_policy = np.delete(optimal_policy, exclude)
+    return optimal_policy

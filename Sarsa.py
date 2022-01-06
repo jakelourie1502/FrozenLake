@@ -1,4 +1,5 @@
 import numpy as np
+from utils import check_optimal
 
 
 
@@ -84,40 +85,3 @@ def sarsa(env,max_episodes,eta,gamma,epsilon,optimal_policy=None,seed=None, init
                 break
 
     return policy, value, episodes
-
-
-
-def check_optimal(optimal_policy,policy,env):
-    if len(policy)<20:
-        policy = np.array(policy)
-        truth_array = np.abs(optimal_policy - policy)
-        truth = np.sum(truth_array)
-        wrong = np.count_nonzero(truth_array)
-    else:
-        lakes = env.lakes_idx
-        goals = np.array(list(env.goal_states_idx.keys()))
-        terminals = goals + 1
-        exclude = np.append(lakes, np.append(goals, terminals))
-        policy = np.array(policy)
-        policy = np.delete(policy,exclude)
-        truth_array = np.abs(optimal_policy - policy)
-        truth = np.sum(truth_array)
-        wrong = np.count_nonzero(truth_array)
-
-    if truth == 0:
-        return True,wrong
-    else:
-        return False,wrong
-
-
-def prep_optimal(env,policy):
-    if len(policy)<20:
-        optimal_policy = np.array(policy)
-    else:
-        optimal_policy = np.array(policy)
-        lakes = env.lakes_idx
-        goals = np.array(list(env.goal_states_idx.keys()))
-        terminals = goals + 1
-        exclude = np.append(lakes, np.append(goals, terminals))
-        optimal_policy = np.delete(optimal_policy, exclude)
-    return optimal_policy
