@@ -5,6 +5,7 @@ from Sarsa import *
 from Q_Learning import *
 from linear_approximation import *
 from Default_Lakes import *
+from utils import *
 
 
 ################ Main function ################
