@@ -7,7 +7,11 @@ def sarsa(env,max_episodes,eta,gamma,epsilon,optimal_policy=None,seed=None, init
           epsilon_floor=0,epsilon_ramp_epoch=None,eta_ramp_epoch=None,madness=1):
     # Get random state
     #random_state = np.random.RandomState(seed)
-
+    """
+    eta_floor: after eta_ramp_epochs, set eta to a constant level
+    epsilon_floor: after epsilon_ramp_epoch, set epsilon to a constant level
+    madness: play random moves for the first X moves in order to create different effective starting points. don't optimise sarsa during these moves
+    """
     # Initialise learning rate and probability of random action
     # eta and epsilon decrease linearly as number of episodes increases
     if eta_ramp_epoch==None:

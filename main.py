@@ -51,7 +51,7 @@ def main():
 
     print('##_Sarsa')
     policy, value, episodes = sarsa(env, max_episodes=max_episodes, eta=eta, gamma=gamma, epsilon=epsilon,
-                                    optimal_policy=optimal_policy, seed=seed)
+                                     seed=seed)
     print('Number of episodes', episodes)
     env.render(policy, value)
     
@@ -59,7 +59,7 @@ def main():
 
     print('##_Q-learning')
     policy, value, episodes = q_learning(env, max_episodes=max_episodes, eta=eta, gamma=gamma, epsilon=epsilon,
-                                         optimal_policy=optimal_policy, seed=seed)
+                                          seed=seed)
     print('Number of episodes:', episodes)
     env.render(policy, value)
     

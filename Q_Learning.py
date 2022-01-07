@@ -4,6 +4,11 @@ from utils import check_optimal
 
 def q_learning(env,max_episodes,eta,gamma,epsilon,optimal_policy=None,seed=None,initial_q=0,eta_floor = 0,
           epsilon_floor=0,epsilon_ramp_epoch=None,eta_ramp_epoch=None,madness=1):
+    """
+    eta_floor: after eta_ramp_epochs, set eta to a constant level
+    epsilon_floor: after epsilon_ramp_epoch, set epsilon to a constant level
+    madness: play random moves for the first X moves in order to create different effective starting points. don't optimise Qlearning during these moves
+    """
     # Get random state
     #random_state = np.random.RandomState(seed)
 
