@@ -25,12 +25,12 @@ env.render(policy, value)
 
 # Sarsa #
 print('##_Sarsa')
-policy, value, episodes= sarsa(env,max_episodes=10000,eta=0.5,gamma=0.9,epsilon=1,optimal_policy=optimal_policy,seed=0)
+policy, value, episodes= sarsa(env,max_episodes=10000,eta=0.5,gamma=0.9,epsilon=0.5,optimal_policy=optimal_policy,seed=0)
 print('Number of episodes',episodes)
 env.render(policy,value)
 
 # # Q Learning #
 print('##_Q-learning')
-policy, value, episodes = q_learning(env,max_episodes=10000,eta=0.5,gamma=0.9,epsilon=1,optimal_policy=optimal_policy,seed=0)
+policy, value, episodes = q_learning(env,max_episodes=10000,eta=0.5,gamma=0.9,epsilon=0.5,optimal_policy=optimal_policy,seed=0)
 print('Number of episodes:',episodes)
 env.render(policy,value)

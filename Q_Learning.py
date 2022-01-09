@@ -10,7 +10,7 @@ def q_learning(env,max_episodes,eta,gamma,epsilon,optimal_policy=None,seed=None,
     madness: play random moves for the first X moves in order to create different effective starting points. don't optimise Qlearning during these moves
     """
     # Get random state
-    #random_state = np.random.RandomState(seed)
+    random_state = np.random.RandomState(seed)
 
     # Initialise learning rate and probability of random action
     # eta and epsilon decrease linearly as number of episodes increases
@@ -46,11 +46,13 @@ def q_learning(env,max_episodes,eta,gamma,epsilon,optimal_policy=None,seed=None,
             eeta = eta[i]
 
         # Select action a for state s accoridng to an e-greedy policy based on Q
-        if epz > np.random.rand(1)[0]:
+        if epz > random_state.rand():
             action = np.random.choice(
                 np.array([0, 1, 2, 3]))
         else:
-            action = np.argmax(q[state, :])
+            max_action = np.max(q[state, :])
+            action = np.random.choice(
+                [i for i in range(len(q[state, :])) if q[state, i] == max_action])
 
         done = False
         step = 0
@@ -60,7 +62,9 @@ def q_learning(env,max_episodes,eta,gamma,epsilon,optimal_policy=None,seed=None,
             next_obs_state, reward, done = env.step(action)
             # print(next_obs_state,reward,done)
             # Select action a' for state s'
-            next_action = np.argmax(q[next_obs_state, :])
+            #next_action = np.argmax(q[next_obs_state, :])
+            max_next_action = np.max(q[next_obs_state, :])
+            next_action = np.random.choice([i for i in range(len(q[next_obs_state, :])) if q[next_obs_state, i] == max_next_action])
 
             if step > need_for_madness:
                 # Update q table
@@ -71,7 +75,7 @@ def q_learning(env,max_episodes,eta,gamma,epsilon,optimal_policy=None,seed=None,
             state = next_obs_state
             action = next_action
 
-            if epz > np.random.rand(1)[0]:
+            if epz > random_state.rand():
                 action = np.random.choice(
                     np.array([0, 1, 2, 3]))
 
