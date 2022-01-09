@@ -5,6 +5,7 @@ from Sarsa import *
 from Q_Learning import *
 from linear_approximation import *
 from Default_Lakes import *
+from utils import *
 
 
 ################ Main function ################
@@ -42,15 +43,15 @@ def main():
     print('')
     
     print('# Model-free algorithms')
-    max_episodes = 10000
+    max_episodes = 2000
     eta = 0.5
-    epsilon = 0.8
+    epsilon = 0.5
     
     print('')
 
     print('##_Sarsa')
     policy, value, episodes = sarsa(env, max_episodes=max_episodes, eta=eta, gamma=gamma, epsilon=epsilon,
-                                    optimal_policy=optimal_policy, seed=seed)
+                                     seed=seed)
     print('Number of episodes', episodes)
     env.render(policy, value)
     
@@ -58,7 +59,7 @@ def main():
 
     print('##_Q-learning')
     policy, value, episodes = q_learning(env, max_episodes=max_episodes, eta=eta, gamma=gamma, epsilon=epsilon,
-                                         optimal_policy=optimal_policy, seed=seed)
+                                          seed=seed)
     print('Number of episodes:', episodes)
     env.render(policy, value)
     
