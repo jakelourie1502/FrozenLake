@@ -84,7 +84,7 @@ def sarsa(env,max_episodes,eta,gamma,epsilon,optimal_policy=None,seed=None, init
 
         if type(optimal_policy) == np.ndarray:
             check_opt,wrong = check_optimal(optimal_policy, policy, env)
-            if episodes % 2500 == 0:
+            if episodes % 5000 == 0:
                 print('Number of Episodes:', episodes)
                 print('Incorrect Policies:', wrong)
                 env.render(policy, value)

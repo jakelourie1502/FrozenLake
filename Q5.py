@@ -25,29 +25,16 @@ policy, value, it_counter = policy_iteration(env, gamma, theta, max_iterations)
 optimal_policy = prep_optimal(env,policy)
 env.render(policy, value)
 
-# # Sarsa #
-# print('##_Sarsa')
-# policy, value, episodes= sarsa(env,max_episodes=500000,eta=0.2,gamma=0.9,epsilon=0.8,optimal_policy=optimal_policy,seed=0,initial_q=1,
-#                                eta_floor = 0.001,epsilon_floor=0.25,epsilon_ramp_epoch=40000,eta_ramp_epoch=300000,madness=10)
-# print('Number of episodes', episodes)
-# env.render(policy,value)
-#
-# # Q Learning #
-# print('##_Q-learning')
-# policy, value, episodes = q_learning(env,max_episodes=500000,eta=0.2,gamma=0.9,epsilon=0.8,optimal_policy=optimal_policy,seed=0,initial_q=1,
-#                                eta_floor = 0.001,epsilon_floor=0.25,epsilon_ramp_epoch=40000,eta_ramp_epoch=300000,madness=10)
-# print('Number of episodes:',episodes)
-# env.render(policy,value)
-
-# # Sarsa #
-# print('##_Sarsa')
-# policy, value, episodes= sarsa(env,max_episodes=150000,eta=0.2,gamma=0.9,epsilon=0.9,optimal_policy=optimal_policy,
-#                                seed=0,initial_q=1,eta_floor=0.001,epsilon_floor=0.1)
-# print('Number of episodes', episodes)
-# env.render(policy,value)
+# Sarsa #
+print('##_Sarsa')
+policy, value, episodes= sarsa(env,max_episodes=500000,eta=0.2,gamma=0.9,epsilon=0.8,optimal_policy=optimal_policy,seed=0,initial_q=1,
+                               eta_floor = 0.001,epsilon_floor=0.25,epsilon_ramp_epoch=40000,eta_ramp_epoch=300000,madness=10)
+print('Number of episodes', episodes)
+env.render(policy,value)
 
 # Q Learning #
 print('##_Q-learning')
-policy, value, episodes = q_learning(env,max_episodes=100000,eta=0.9,gamma=0.9,epsilon=0.9,optimal_policy=optimal_policy,seed=0,initial_q=1)
+policy, value, episodes = q_learning(env,max_episodes=500000,eta=0.2,gamma=0.9,epsilon=0.8,optimal_policy=optimal_policy,seed=0,initial_q=1,
+                               eta_floor = 0.001,epsilon_floor=0.25,epsilon_ramp_epoch=40000,eta_ramp_epoch=300000,madness=10)
 print('Number of episodes:',episodes)
 env.render(policy,value)

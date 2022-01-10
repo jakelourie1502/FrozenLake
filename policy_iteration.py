@@ -120,7 +120,7 @@ def policy_iteration(env, gamma, theta, max_it_iter, max_it_eval = 50, eval_meth
                 policy_info[s]['policy'] = pol[s]
 
         if no_change_checker:
-            print(f"Policy static after {it} iterations")
+            print(f"Policy static after {it+1} iterations")
             state_values = [policy_info[x]['value'] for x in range(env.n_states)]
             policy_max = [np.argmax(policy_info[x]['policy']) for x in range(env.n_states)]
             return policy_max, state_values, it+1

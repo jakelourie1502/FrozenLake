@@ -1,7 +1,7 @@
 # Model-based algorithms
 
 ## Policy iteration
-Policy static after 1 iterations
+Policy static after 2 iterations
 [['v' '>' 'v' '<']
  ['v' '^' 'v' '^']
  ['>' 'v' 'v' '^']
