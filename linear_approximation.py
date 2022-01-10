@@ -44,8 +44,6 @@ class LinearWrapper:
 
         return state, reward, done
 
-        # return self.encode_state(state), reward, done
-
     def render(self, policy=None, value=None):
         # The method render is capable of rendering the state of the environment or a pair of policy and value function.
         self.env.render(policy, value)
